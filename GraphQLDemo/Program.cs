@@ -19,7 +19,6 @@ builder.Services.AddSwaggerGen();
 
 
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -31,6 +30,7 @@ var ctx = app.Services.GetService<DemoContext>();
 ctx.Seed();
 
 
+app.UseGraphQLAltair();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
