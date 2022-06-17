@@ -1,8 +1,10 @@
+using GraphQL.Types;
 using GraphQLDemo;
 using Microsoft.EntityFrameworkCore;
+using GraphQL.MicrosoftDI;
+using GraphQL.Server;
+using GraphQL.SystemTextJson;
 
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,15 @@ var optionsBuilder = new DbContextOptionsBuilder<DemoContext>().UseInMemoryDatab
 var _options = optionsBuilder.Options;
 builder.Services.AddSingleton<DbContextOptions<DemoContext>>(_options);
 builder.Services.AddSingleton<DemoContext>(new DemoContext(_options));
+
+//Add graphql schema
+builder.Services.AddSingleton<ISchema, DemoSchema>(services => new DemoSchema(new SelfActivatingServiceProvider(services)));
+// register graphQL
+builder.Services.AddGraphQL(options =>
+{
+    options.EnableMetrics = true;
+})
+.AddSystemTextJson();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -29,6 +40,8 @@ if (app.Environment.IsDevelopment())
 var ctx = app.Services.GetService<DemoContext>();
 ctx.Seed();
 
+// make sure all our schemas registered to route
+app.UseGraphQL<ISchema>();
 
 app.UseGraphQLAltair();
 app.UseHttpsRedirection();
@@ -36,5 +49,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();
