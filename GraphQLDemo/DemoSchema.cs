@@ -7,7 +7,8 @@ namespace GraphQLDemo
     {
         public DemoSchema(IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            Query = serviceProvider.GetRequiredService<ArticleQuery>();
+            Query = serviceProvider.GetRequiredService<RootQuery>();
+            Mutation = serviceProvider.GetRequiredService<RootMutation>();
         }
     }
 }

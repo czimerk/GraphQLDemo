@@ -12,6 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 var optionsBuilder = new DbContextOptionsBuilder<DemoContext>().UseInMemoryDatabase("test");
 var _options = optionsBuilder.Options;
 builder.Services.AddSingleton<DbContextOptions<DemoContext>>(_options);
+
+//only for seeding
 builder.Services.AddSingleton<DemoContext>(new DemoContext(_options));
 
 //Add graphql schema

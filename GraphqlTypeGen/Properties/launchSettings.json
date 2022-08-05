@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GraphqlTypeGen": {
+      "commandName": "Project",
+      "commandLineArgs": "\"c:\\GitRepos\\GraphQLDemo\\GraphQLDemo\\Domain\\\""
+    }
+  }
+}
