@@ -9,15 +9,17 @@ using GraphQL.SystemTextJson;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var optionsBuilder = new DbContextOptionsBuilder<DemoContext>().UseInMemoryDatabase("test");
+var optionsBuilder = new DbContextOptionsBuilder<DemoContext>()
+    .UseInMemoryDatabase("test");
 var _options = optionsBuilder.Options;
 builder.Services.AddSingleton<DbContextOptions<DemoContext>>(_options);
 
 //only for seeding
 builder.Services.AddSingleton<DemoContext>(new DemoContext(_options));
 
-//Add graphql schema
-builder.Services.AddSingleton<ISchema, DemoSchema>(services => new DemoSchema(new SelfActivatingServiceProvider(services)));
+//Add graphql schema, SelfActivatingServiceProvider->registers types
+builder.Services.AddSingleton<ISchema, DemoSchema>(services 
+    => new DemoSchema(new SelfActivatingServiceProvider(services)));
 // register graphQL
 builder.Services.AddGraphQL(options =>
 {
@@ -44,8 +46,8 @@ ctx.Seed();
 
 // make sure all our schemas registered to route
 app.UseGraphQL<ISchema>();
-
 app.UseGraphQLAltair();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

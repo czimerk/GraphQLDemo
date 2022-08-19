@@ -13,6 +13,19 @@ namespace GraphQLDemo.Query
         public RootQuery(DbContextOptions<DemoContext> options)
         {
             _options = options;
+
+            Field<ListGraphType<OrderType>>(
+                "orders",
+                resolve: context =>
+                {
+                    throw new Exception("DB Unavailable");
+                    using (var db = new DemoContext(_options))
+                    {
+                        return db.Orders.ToList();
+                    }
+                }
+            );
+
             Field<ListGraphType<ArticleType>>(
               "articles",
               arguments: new QueryArguments(
@@ -36,18 +49,6 @@ namespace GraphQLDemo.Query
                       return query.ToList();
                   }
               }
-            );
-
-
-            Field<ListGraphType<OrderType>>(
-                "orders",
-                resolve: context =>
-                {
-                    using (var db = new DemoContext(_options))
-                    {
-                        return db.Orders.ToList();
-                    }
-                }
             );
 
             Field<ListGraphType<OrderType>>(

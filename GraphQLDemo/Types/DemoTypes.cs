@@ -15,7 +15,10 @@ namespace GraphQLDemo.Types
             Field(x => x.Brand,true);
             Field(x => x.InventoryCode, true);
             Field(x => x.Created);
-            Field(x => x.StoreId, true);
+
+            Field(x => x.StoreId, true)
+                .DeprecationReason("Will not be available after 2022.12.10");
+            
             Field(x => x.Category, true);
             Field(x => x.IsActive);
             Field(x => x.ShortText, true);
@@ -41,7 +44,7 @@ namespace GraphQLDemo.Types
             Field(x => x.Id);
             Field(x => x.Status);
             Field(x => x.OrderDate);
-            Field(x => x.UpdatedDate);
+            Field(x => x.UpdatedDate, true);
             Field<UserType>("user", resolve: ResolveUser());
             Field<ListGraphType<OrderLineType>>("orderLines", resolve: ResolveOrderLines());
         }
